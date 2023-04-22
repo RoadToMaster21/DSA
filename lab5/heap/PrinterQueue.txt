@@ -1,0 +1,52 @@
+class PrinterQueue
+{
+    // your attributes
+    struct Request {
+        int priority;
+        string fileName;
+        Request* next;
+        Request(int p, string f) : priority(p), fileName(f), next(nullptr) {}
+    };
+    Request* head;
+public:
+    // your methods
+    PrinterQueue() : head(nullptr) {}
+    ~PrinterQueue() {
+        while (head != nullptr) {
+            Request* temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+    void addNewRequest(int priority, string fileName)
+    {
+        // your code here
+        if (head == nullptr || priority > head->priority) {
+            Request* newRequest = new Request(priority, fileName);
+            newRequest->next = head;
+            head = newRequest;
+        } else {
+            Request* current = head;
+            while (current->next != nullptr && current->next->priority >= priority) {
+                current = current->next;
+            }
+            Request* newRequest = new Request(priority, fileName);
+            newRequest->next = current->next;
+            current->next = newRequest;
+        }
+    }
+
+    void print()
+    {
+        // your code here
+        // After some logic code, you have to print fileName with endline 
+        if (head != nullptr) {
+            Request* temp = head;
+            cout << temp->fileName << endl;
+            head = head->next;
+            delete temp;
+        } else {
+            cout << "No file to print" << endl;
+        }
+    }
+};

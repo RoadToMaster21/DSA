@@ -1,0 +1,15 @@
+BTNode* lowestACT(BTNode* root, int a, int b) {
+    if (!root) return NULL;
+    if (root->val == a || root->val == b) return root;
+    
+    BTNode* left = lowestACT(root->left, a, b);
+    BTNode* right = lowestACT(root->right, a, b);
+    
+    if (left && right) return root;
+    else if (left) return left;
+    else return right;
+}
+int lowestAncestor(BTNode* root, int a, int b) {
+    BTNode* temp = lowestACT(root, a, b);
+    return temp->val;
+}

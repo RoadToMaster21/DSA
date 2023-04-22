@@ -1,0 +1,24 @@
+void printIn(Node* root) {
+    if (root != NULL) {
+        printIn(root->pLeft);
+        cout << root->data << " ";
+        printIn(root->pRight);
+    }
+}
+
+bool isExist(Node* root, T value) {
+    if (root == NULL) return false;
+    if (value < root->data) return isExist(root->pLeft, value);
+    if (value > root->data) return isExist(root->pRight, value);
+    return true;
+}
+
+void printInorder() {
+    //TODO
+    printIn(root);
+}
+
+bool search(const T &value){
+    //TODO
+    return isExist(root, value);
+}

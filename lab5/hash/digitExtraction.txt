@@ -1,0 +1,30 @@
+long int midSquare(long int seed)
+{
+    long int square = seed * seed;
+    square /= 100;
+    square %= 10000;
+    return square;
+}
+long int moduloDivision(long int seed, long int mod)
+{
+    return seed % mod;
+}
+long int digitExtraction(long int seed,int* extractDigits,int size)
+{
+    long int result = 0;
+    long divnum = 10;
+    int n = 1;
+    while (seed / divnum > 0) {
+        n++;
+        divnum *= 10;
+    }
+    int array[n];
+    for (int i = n-1; i >= 0; i--) {
+        array[i] = seed % 10;
+        seed /= 10;
+    }
+    for (int i = 0; i < size; i++) {
+        result = result*10 + array[extractDigits[i]];
+    }
+    return result;
+}

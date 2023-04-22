@@ -1,0 +1,11 @@
+REG 1 John 35
+REG Trump 17
+CLE 1
+REGM TOM 47 3
+REG 5 Clinton 70
+REG Biden 68
+CLE 5
+CLE 4
+PS 2
+REG 1 Benjamin 50
+CLE 3

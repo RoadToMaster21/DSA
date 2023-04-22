@@ -1,0 +1,73 @@
+//Helping functions
+Node* rightRotate(Node* root) {
+    Node* newroot = root->pLeft;
+    root->pLeft = newroot->pRight;
+    newroot->pRight = root;
+    return newroot;
+}
+
+Node* leftRotate(Node* root) {
+    Node* newroot = root->pRight;
+    root->pRight = newroot->pLeft;
+    newroot->pLeft = root;
+    return newroot;
+}
+
+int getBalance(Node* root) {
+    if (root == NULL) return 0;
+    return getHeightRec(root->pLeft) - getHeightRec(root->pRight);
+}
+
+Node* deletion(Node* root, T value) {
+    // base case
+    if (root == NULL) return root;
+    if (value < root->data) {
+        root->pLeft = deletion(root->pLeft, value);
+    } else if (value > root->data) {
+        root->pRight = deletion(root->pRight, value);
+    } else {
+        if (root->pLeft == NULL && root->pRight == NULL) {
+            root = NULL;
+        } else if (root->pLeft == NULL) {
+            Node* temp = root->pRight;
+            *root = *temp;
+            delete temp;
+        } else if (root->pRight == NULL) {
+            Node* temp = root->pLeft;
+            *root = *temp;
+            delete temp;
+        } else {
+            // 2 child case
+            Node* succ = root->pLeft;
+            while (succ->pRight != NULL) {
+                succ = succ->pRight;
+            }
+            root->data = succ->data;
+            root->pLeft = deletion(root->pLeft, succ->data);
+        }
+    }
+        
+    if (root == NULL) return root;
+    if (getBalance(root) > 1) {
+        if (getBalance(root->pLeft) >= 0) {
+            return rightRotate(root);
+        } else {
+            root->pLeft = leftRotate(root->pLeft);
+            return rightRotate(root);
+        }
+    } 
+    if (getBalance(root) < -1) {
+        if (getBalance(root->pRight) <= 0) {
+            return leftRotate(root);
+        } else {
+            root->pRight = rightRotate(root->pRight);
+            return leftRotate(root);
+        }
+    }
+    return root;
+}
+
+void remove(const T &value) {
+    //TODO
+    root = deletion(root, value);
+}

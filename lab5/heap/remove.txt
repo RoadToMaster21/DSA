@@ -1,0 +1,27 @@
+template<class T>
+int Heap<T>::getItem(T item) {
+    // TODO: return the index of item in heap
+    for (int index = 0; index < count; index++) {
+        if (elements[index] == item) return index;
+    }
+    return -1;
+}
+
+template<class T>
+void Heap<T>::remove(T item) {
+    // TODO: remove the element with value equal to item
+    int index = getItem(item);
+    if (index != -1) {
+        elements[index] = elements[count-1];
+        count--;
+        reheapDown(index);
+    }
+}
+
+template<class T>
+void Heap<T>::clear() {
+    // TODO: delete all elements in heap
+    delete[] elements;
+    elements = NULL;
+    count = 0;
+}

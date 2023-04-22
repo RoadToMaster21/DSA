@@ -1,0 +1,23 @@
+void reverseString(string &s, int left, int right) {
+    if (left >= right) {
+        return;
+    }
+    swap(s[left], s[right]);
+    return reverseString(s, left + 1, right - 1);
+}
+
+void reverseWord(string &s, int left, int right) {
+    if (left >= right) return;
+    int next = s.find(' ', left);
+    if (next == -1) {
+        next = right + 1;
+    }
+    reverseString(s, left, next - 1);
+    reverseWord(s, next + 1, right);
+}
+
+string reverseSentence(string s) {
+    reverseString(s, 0, s.length() - 1);
+    reverseWord(s, 0, s.length() -1);
+    return s;
+}

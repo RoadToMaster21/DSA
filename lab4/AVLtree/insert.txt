@@ -1,0 +1,61 @@
+//Helping functions
+Node* rightRotate(Node* root) {
+    Node* newroot = root->pLeft;
+    root->pLeft = newroot->pRight;
+    newroot->pRight = root;
+    return newroot;
+}
+
+Node* leftRotate(Node* root) {
+    Node* newroot = root->pRight;
+    root->pRight = newroot->pLeft;
+    newroot->pLeft = root;
+    return newroot;
+}
+
+int getBalance(Node* root) {
+    if (root == NULL) return 0;
+    return getHeightRec(root->pLeft) - getHeightRec(root->pRight);
+}
+
+Node* insert(Node* root, T data) {
+    if (root == NULL) return new Node(data);
+
+    if (data < root->data){
+        root->pLeft = insert(root->pLeft, data);
+    }
+    else {
+        root->pRight = insert(root->pRight, data);
+    }
+
+    int balance = getBalance(root);
+    
+    // left - left
+    if (balance > 1 && data < root->pLeft->data)
+        return rightRotate(root);
+    
+    // left - right  
+    if (balance > 1 && data >= root->pLeft->data)
+    {
+        root->pLeft = leftRotate(root->pLeft);
+        return rightRotate(root);
+    }
+    
+    // right - right
+    if (balance < -1 && data >= root->pRight->data)
+        return leftRotate(root);
+
+    // right - left  
+    if (balance < -1 && data < root->pRight->data)
+    {
+        root->pRight = rightRotate(root->pRight);
+        return leftRotate(root);
+    }
+        
+    return root;
+}
+
+void insert(const T &value) {
+    //TODO
+    root = insert(root, value);
+}

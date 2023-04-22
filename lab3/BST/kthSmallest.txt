@@ -1,0 +1,17 @@
+void InordertoQueue(queue<int> &q, BSTNode* root) {
+    if (root != NULL) {
+        InordertoQueue(q, root->left);
+        q.push(root->val);
+        InordertoQueue(q, root->right);
+    }
+}
+
+int kthSmallest(BSTNode* root, int k) {
+    // STUDENT ANSWER
+    queue<int> q;
+    InordertoQueue(q, root);
+    for (int i = 0; i < k - 1; i++) {
+        q.pop();
+    }
+    return q.front();
+}

@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1678730317 source:c:\users\dell\máy tính\assignment\dsaa\main.cpp
+	<iostream>
+	<cmath>
+	<fstream>
+	<string>
+

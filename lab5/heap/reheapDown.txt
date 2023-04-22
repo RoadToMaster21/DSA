@@ -1,0 +1,32 @@
+void reheapDown(int maxHeap[], int numberOfElements, int index)
+{
+    int leftChild = index * 2 + 1;
+    int rightChild = index * 2 + 2;
+    if (rightChild < numberOfElements) {
+        int maxChild = maxHeap[leftChild];
+        int position = leftChild;
+        if (maxHeap[rightChild] > maxChild) {
+            position = rightChild;
+            maxChild = maxHeap[rightChild];
+        }
+        if (maxHeap[index] < maxChild) {
+            swap(maxHeap[index], maxHeap[position]);
+            reheapDown(maxHeap, numberOfElements, position);
+        }
+    } else if (leftChild < numberOfElements) {
+        if (maxHeap[leftChild] > maxHeap[index]) {
+            swap(maxHeap[leftChild], maxHeap[index]);
+            reheapDown(maxHeap, numberOfElements, leftChild);
+        }
+    }
+}
+
+void reheapUp(int maxHeap[], int numberOfElements, int index)
+{
+    if (index <= 0 || index >= numberOfElements) return;
+    int parent = (index - 1) / 2;
+    if (maxHeap[index] > maxHeap[parent]) {
+        swap(maxHeap[index], maxHeap[parent]);
+        reheapUp(maxHeap, numberOfElements, parent);
+    }
+}

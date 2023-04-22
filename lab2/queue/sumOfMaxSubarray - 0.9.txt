@@ -1,0 +1,23 @@
+int maxinArray(vector<int>& nums, int left, int right) {
+    int maxE = nums[left];
+    for (int i = left + 1; i < right; i++) {
+        if (nums[i] > maxE) {
+            maxE = nums[i];
+        }
+    }
+    return maxE;
+}
+int sumOfMaxSubarray(vector<int>& nums, int k) {
+    // STUDENT ANSWER
+    if (k > nums.size() || k <= 0 || nums.size() < 1) return -1;
+    int sum = 0;
+    queue<int> q;
+    for (int i = 0; i < nums.size() - k + 1; i++) { 
+        q.push(maxinArray(nums, i, i+k));
+    }
+    while (!q.empty()) {
+        sum += q.front();
+        q.pop();
+    }
+    return sum;
+}

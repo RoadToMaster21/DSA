@@ -1,0 +1,11 @@
+REGM Nghiem 24 4 
+REG Ka 25
+REG 2 Bac 21
+REG Di 56
+REG 5 Bim 25
+PS 3
+PQ 1
+REG 2 Code 26
+REG Kawaki 16
+REG Anotherone 53
+PT

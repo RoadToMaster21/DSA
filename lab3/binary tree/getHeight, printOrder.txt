@@ -1,0 +1,57 @@
+// STUDENT ANSWER BEGIN
+// You can define other functions here to help you.
+
+int height(Node* root) {
+    if (root == NULL) return 0;
+    if (root->pLeft == NULL && root->pRight == NULL) return 1;
+    return 1 + max(height(root->pLeft), height(root->pRight));
+}
+
+void printpre(Node* root) {
+    if (root != NULL) {
+        cout << root->value << " ";
+        printpre(root->pLeft);
+        printpre(root->pRight);
+    }
+}
+
+void printin(Node* root) {
+    if (root != NULL) {
+        printin(root->pLeft);
+        cout << root->value << " ";
+        printin(root->pRight);
+    }
+}
+
+void printpost(Node* root) {
+    if (root != NULL) {
+        printpost(root->pLeft);
+        printpost(root->pRight);
+        cout << root->value << " ";
+    }
+}
+
+int getHeight() {
+    // TODO: return height of the binary tree.
+    return height(root);
+}
+
+string preOrder() {
+    // TODO: return the sequence of values of nodes in pre-order.
+    printpre(root);
+    return "";
+}
+
+string inOrder() {
+    // TODO: return the sequence of values of nodes in in-order.
+    printin(root);
+    return "";
+}
+
+string postOrder() {
+    // TODO: return the sequence of values of nodes in post-order.
+    printpost(root);
+    return "";
+}
+
+// STUDENT ANSWER END

@@ -1,0 +1,5 @@
+REGM TOM 70 2
+REG 1 Benjamin 80
+REG Trump 17
+CLE 2
+PT

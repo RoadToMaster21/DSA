@@ -1,0 +1,24 @@
+string expandString(string s, int i) {
+    if (i == 1) return s;
+    if (i == 0) return "";
+    return s + expandString(s, i - 1);
+}
+
+void changeString(string &s) {
+    int left = s.rfind("(", s.length());
+    int right = s.find(")", 0);
+    if (left == -1 && right == -1) return;
+    if (left > right) {
+        right = s.find(")", left);
+    }
+    string temp = s.substr(left + 1, right - left - 1);
+    int i = s[left - 1] - 48;
+    string str = expandString(temp, i);
+    s.replace(left - 1, right - left + 2, str);
+    changeString(s);
+}
+
+string expand(string s) {
+    changeString(s);
+    return s;
+}

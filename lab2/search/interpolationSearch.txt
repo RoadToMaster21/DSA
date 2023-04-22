@@ -1,0 +1,15 @@
+int interpolationSearch(int arr[], int left, int right, int x)
+{
+    if (left <= right && x >= arr[left] && x <= arr[right]) {
+        int mid = left + (right - left) * (x - arr[left]) / (arr[right] - arr[left]);
+            cout << "We traverse on index: " << mid << endl;
+        if (x == arr[mid]) {
+            return mid;
+        } else if (x > arr[mid]) {
+            return interpolationSearch(arr, mid + 1, right, x);
+        } else {
+            return interpolationSearch(arr, left, mid - 1, x);
+        }
+    }
+    return -1;
+}

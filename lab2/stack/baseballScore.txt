@@ -1,0 +1,30 @@
+int baseballScore(string ops){
+/*TODO*/
+    stack<int> st;
+    int i = 0;
+    while (ops[i] != '\0') {
+        if (ops[i] >= '0' && ops[i] <= '9') {
+            st.push(ops[i] - 48);
+        }
+        if (ops[i] == 'C') {
+            st.pop();
+        }
+        if (ops[i] == 'D') {
+            st.push(st.top() * 2);
+        }
+        if (ops[i] == '+') {
+            int temp = st.top();
+            st.pop();
+            int next = temp + st.top();
+            st.push(temp);
+            st.push(next);
+        }
+        i++;
+    }
+    int sum = 0;
+    while (!st.empty()) {
+        sum += st.top();
+        st.pop();
+    }
+    return sum;
+}

@@ -1,0 +1,39 @@
+Character::Character() {
+    this->hp = 0;
+    this->x = 0;
+    this->y = 0;
+}
+
+Character::Character(int hp, int x, int y) {
+    this->hp = hp;
+    this->x = x;
+    this->y = y;
+}
+
+int Character::getHp() {
+    return this->hp;
+}
+
+void Character::setHp(int hp) {
+    this->hp = hp;
+}
+
+int Character::getX() {
+    return x;
+}
+
+void Character::setX(int x) {
+    this->x = x;
+}
+
+int Character::getY() {
+    return y;
+}
+
+void Character::setY(int y) {
+    this->y = y;
+}
+
+int Character::getManhattanDistTo(Character* other) {
+    return abs(this->x - other->getX()) + abs(this->y - other->getY());
+}

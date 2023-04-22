@@ -1,0 +1,42 @@
+bool isLeaf(BTNode* leaf) {
+    if (leaf->left == NULL && leaf->right == NULL) return true;
+    return false;
+}
+void dfsCount(BTNode* root) {
+    if (root == NULL) return;
+    if (isLeaf(root)) return;
+    if (root->left != NULL) {
+        root->left->val += root->val;
+    }
+    if (root->right != NULL) {
+        root->right->val += root->val;
+    }
+    dfsCount(root->left);
+    dfsCount(root->right);
+}
+int longestPathSum(BTNode* root) {
+    if (root == NULL) return 0;
+    dfsCount(root);
+    BTNode* space = NULL;
+    queue<BTNode*> q;
+    q.push(root);
+    q.push(space);
+    int maxSumPath = root->val;
+    while (!q.empty()) {
+        BTNode* temp = q.front();
+        q.pop();
+        if (temp != NULL) {
+            if (temp->val > maxSumPath) {
+                maxSumPath = temp->val;
+            }
+            if (temp->left != NULL) q.push(temp->left);
+            if (temp->right != NULL) q.push(temp->right);
+        } else {
+            if (!q.empty()) {
+                maxSumPath = q.front()->val;
+                q.push(space);
+            }
+        }
+    }
+    return maxSumPath;
+}

@@ -1,0 +1,31 @@
+/// BEGIN STUDENT CODE
+// ======================================
+// You may need some helping functions here
+
+void toStringPreOrder(Node* node, stringstream& ss) {
+    ss << "[(" << node->numEntries << ")";
+    if (node) {
+        for (int i = 0; i < node->numEntries; i++) {
+            ss << node->entries[i].toString();
+        }
+        if (node->firstPtr) {
+            ss << "] ";
+            toStringPreOrder(node->firstPtr, ss);
+        } else {
+            ss << "]";
+        }
+        for (int i = 0; i < node->numEntries; i++) {
+            if (node->entries[i].rightPtr) {
+                ss << " ";
+                toStringPreOrder(node->entries[i].rightPtr, ss);
+            }
+        }
+    }
+}
+
+string toStringPreOrder() {
+    stringstream ss;
+    toStringPreOrder(root, ss);
+    return ss.str();
+}
+/// END STUDENT CODE

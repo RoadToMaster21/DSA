@@ -1,0 +1,15 @@
+void shrink(string &s) {
+    int temp = s.find("()", 0);
+    if (temp == -1) {
+        return;
+    } else {
+        s.erase(temp, 2);
+    }
+    shrink(s);
+}
+
+int mininumBracketAdd(string s) {
+    // STUDENT ANSWER
+    shrink(s);
+    return s.length();
+}

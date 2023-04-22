@@ -1,0 +1,8 @@
+int myArrayToInt(char *str, int n) 
+{ 
+    /*  
+     * STUDENT ANSWER
+     */ 
+    if (n == 1) return int(str[0] - 48);
+    return pow(10, n-1) * int(str[0] - 48) + myArrayToInt(str + 1, n-1);
+}

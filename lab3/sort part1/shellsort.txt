@@ -1,0 +1,26 @@
+// TODO: Write your code here
+static void sortSegment(T* start, T* end, int segment_idx, int cur_segment_total) {
+    // TODO
+    int size = end - start;
+    for (int i = 1; segment_idx + cur_segment_total * i < size; i++) {
+        int temp = start[segment_idx + cur_segment_total * i];
+        int index = i;
+        while (index > 0 && start[segment_idx + (index - 1) * cur_segment_total] > temp) {
+            start[segment_idx + index * cur_segment_total] = start[segment_idx + (index - 1) * cur_segment_total];
+            index--;
+        }
+        start[segment_idx + index * cur_segment_total] = temp;
+    }
+}
+
+static void ShellSort(T* start, T* end, int* num_segment_list, int num_phases) {
+    // TODO
+    // Note: You must print out the array after sorting segments to check whether your algorithm is true.
+    for (int i = num_phases - 1; i >= 0; i--) {
+        for (int gap = 0; gap < num_segment_list[i]; gap++) {
+            sortSegment(start, end, gap, num_segment_list[i]);
+        } 
+        cout << num_segment_list[i] << " segments: ";
+        printArray(start, end);
+    }
+}

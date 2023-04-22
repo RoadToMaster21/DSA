@@ -1,0 +1,50 @@
+bool isLeaf(BTNode* leaf) {
+    if (leaf->left == NULL && leaf->right == NULL) return true;
+    return false;
+}
+void pushTo(stack<int> &st, int num) {
+    int temp = num;
+    if (temp == 0) {
+        st.push(temp);
+        return;
+    }
+    while (temp != 0) {
+        st.push(temp % 10);
+        temp = temp / 10;
+    }
+}
+long popfrom(stack<int> st) {
+    long answer = 0;
+    while (!st.empty()) {
+        answer = answer * 10 + st.top();
+        st.pop();
+    }
+    return answer;
+}
+
+void dfsCount(BTNode* root, long &sum) {
+    if (root == NULL) return;
+    if (isLeaf(root)) {
+        sum += root->val;
+        return;
+    }
+    if (root->left != NULL) {
+        stack<int> st;
+        pushTo(st, root->left->val);
+        pushTo(st, root->val);
+        root->left->val = popfrom(st) % 27022001;
+    }
+    if (root->right != NULL) {
+        stack<int> st;
+        pushTo(st, root->right->val);
+        pushTo(st, root->val);
+        root->right->val = popfrom(st) % 27022001;
+    }
+    dfsCount(root->left, sum);
+    dfsCount(root->right, sum);
+}
+int sumDigitPath(BTNode* root) {
+    long sum = 0;
+    dfsCount(root, sum);
+    return sum % 27022001;
+}

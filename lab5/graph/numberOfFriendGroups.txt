@@ -1,0 +1,22 @@
+void dfs(int u, vector<vector<int>>& friends, bool visited[]) {
+    visited[u] = true;
+    for (int v : friends[u]) {
+        if (!visited[v]) {
+            dfs(v, friends, visited);
+        }
+    }
+}
+int numberOfFriendGroups(vector<vector<int>>& friends) {
+    //STUDENT ANSWER
+    int n = friends.size();
+    bool visited[n];
+    memset(visited, false, sizeof(visited));
+    int num_groups = 0;
+    for (int u = 0; u < n; u++) {
+        if (!visited[u]) {
+            num_groups++;
+            dfs(u, friends, visited);
+        }
+    }
+    return num_groups;
+}

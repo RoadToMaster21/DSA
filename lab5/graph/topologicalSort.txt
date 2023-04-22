@@ -1,0 +1,47 @@
+class Graph {
+
+    int V;
+    Adjacency* adj;
+
+public:
+    Graph(int V){
+        this->V = V;
+        adj = new Adjacency[V];
+    }
+    void addEdge(int v, int w){
+        adj[v].push(w);
+    }
+    
+    //Heling functions
+    void DFS(int v, bool visited[], int departure[], int &time) {
+        visited[v] = true;
+        for (int i = 0; i < adj[v].getSize(); i++) {
+            int ver = adj[v].getElement(i);
+            if (!visited[ver]) {
+                DFS(ver, visited, departure, time);
+            }
+        }
+        // set departure time of vertex v
+        departure[time++] = v;
+    }
+    
+    void topologicalSort(){
+        //TODO
+        bool* visited = new bool[V];
+        int* departure = new int[V];
+        for (int i = 0; i < V; i++) {
+            departure[i] = -1;
+            visited[i] = false;
+        }
+        int time = 0;
+        // perform DFS on all unvisited vertices
+        for (int i = 0; i < V; i++) {
+            if (visited[i] == 0) {
+                DFS(i, visited, departure, time);
+            }
+        }
+        // print the topological sort
+        for (int i = V - 1; i >= 0; i--)
+            cout << departure[i] << " ";
+        }
+};

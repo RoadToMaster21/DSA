@@ -1,0 +1,11 @@
+bool isPalindromeRec(string str, int left, int right) {
+    if(left > right - 1) return true;
+    if(str[left] == ' ') return isPalindromeRec(str, left + 1, right);
+    if(str[right] == ' ') return isPalindromeRec(str, left, right - 1);
+    if(str[left] != str[right]) return false;
+    return isPalindromeRec(str, left + 1, right - 1);
+}
+
+bool isPalindrome(string str) {
+    return isPalindromeRec(str, 0, str.length() - 1);
+}

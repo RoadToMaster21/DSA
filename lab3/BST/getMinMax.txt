@@ -1,0 +1,28 @@
+// STUDENT ANSWER BEGIN
+// You can define other functions here to help you.
+
+T findMin(Node* root) {
+    while (root->pLeft != NULL) {
+        root = root->pLeft;
+    }
+    return root->value;
+}
+
+T findMax(Node* root) {
+    while (root->pRight != NULL) {
+        root = root->pRight;
+    }
+    return root->value;
+}
+
+T getMin() {
+    //TODO: return the minimum values of nodes in the tree.
+    return findMin(root);
+}
+
+T getMax() {
+    //TODO: return the maximum values of nodes in the tree.
+    return findMax(root);
+}
+
+// STUDENT ANSWER END

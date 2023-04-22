@@ -1,0 +1,37 @@
+template <class T>
+void SLinkedList<T>::bubbleSort()
+{
+    // Node* i = head;
+    // Node* j = head;
+    // Node* updatetail = tail;
+    // while (i != tail) {
+    //     while (j != updatetail) {
+    //         if (j->data > j->next->data) {
+    //             T temp = j->data;
+    //             j->data = j->next->data;
+    //             j->next->data = temp;
+    //         }
+    //         if (j->next == updatetail) {
+    //             updatetail = j;
+    //             break;
+    //         }
+    //         j = j->next;
+    //     }
+    //     printList();
+    //     j = head;
+    //     i = i->next;
+    // }
+    
+    for (int i = 0 ; i < count - 1; i++) {
+        Node* p = head;
+        for (int j = 0; j < count - 1 - i; j++) {
+            if (p->data > p->next->data) {
+                T temp = p->data;
+                p->data = p->next->data;
+                p->next->data = temp;
+            }
+            p = p->next;
+        }
+        printList();
+    }
+}

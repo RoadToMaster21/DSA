@@ -1,0 +1,32 @@
+template<class T>
+int Heap<T>::size(){
+    return count;
+}
+
+template<class T>
+bool Heap<T>::isEmpty(){
+    return count == 0;
+}
+
+template<class T>
+T Heap<T>::peek(){
+    return elements[0];
+}
+
+template<class T>
+bool Heap<T>::contains(T item){
+    if (count == 0) return false;
+    for (int i = 0; i < count; i++) {
+        if (item == elements[i]) return true;
+    }
+    return false;
+}
+
+template<class T>
+bool Heap<T>::pop(){
+    if (count == 0) return false;
+    elements[0] = elements[count - 1];
+    count--;
+    reheapDown(0);
+    return true;
+}

@@ -1,0 +1,25 @@
+/// BEGIN STUDENT CODE
+/// ======================================================
+// You may need some helping functions here
+bool search(Node* root, const K& key, Node*& outNodePtr, int& outEntryIdx) {
+    while (root) {
+        int i = 0;
+        while (i < root->numEntries && root->entries[i].key < key) {
+            i++;
+        }
+        if (root->entries[i].key == key) {
+            outNodePtr = root;
+            outEntryIdx = i;
+            return true;
+        }
+        root = root->firstPtr;
+    }
+    outNodePtr = nullptr;
+    outEntryIdx = -1;
+    return false;
+}
+
+bool search(const K& key, Node*& outNodePtr, int& outEntryIdx) {
+    return search(root, key, outNodePtr, outEntryIdx);
+}
+/// END STUDENT CODE

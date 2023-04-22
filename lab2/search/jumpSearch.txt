@@ -1,0 +1,38 @@
+int printArray(int arr[], int x, int left, int right) {
+    for (int i = left; i < right; i++) {
+        if (arr[i] == x) {
+            if (i != left) cout << i;
+            return i;
+        }
+        if (i != left) cout << i << " ";
+    }
+    return -1;
+}
+int jumpSearch(int arr[], int x, int n) {
+    // TODO: print the traversed indexes and return the index of value x in array if x is found, otherwise, return -1.
+    if (n <= 0) {
+        return -1;
+    }
+    int k = sqrt(n);
+    int i = 0;
+    bool flag = false;
+    for (i = 0; i < n; i += k) {
+        cout << i << " ";
+        if (arr[i] < x && x < arr[i+k]) {
+            flag = true;
+            if (i + k < n) cout << i + k << " ";
+            break;
+        }        
+        if (arr[i] == x) return i;
+    }
+    
+    if (flag) {
+        return printArray(arr, x, i, i+k);
+    } else {
+        i -= k;
+        if (arr[i] <= x && x <= arr[n-1]) {
+            return printArray(arr, x, i, n);
+        }
+    }
+    return -1;
+}

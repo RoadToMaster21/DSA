@@ -1,0 +1,12 @@
+/// BEGIN STUDENT CODE
+string toString() {
+    stringstream ss;
+    // Fill your code here
+    ss << "[(" << numEntries << ")";
+    for (int i = 0; i < numEntries; i++) {
+        ss << entries[i].toString();
+    }
+    ss << "]";
+    return ss.str();
+}
+/// END STUDENT CODE

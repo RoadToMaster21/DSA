@@ -1,0 +1,102 @@
+/// BEGIN STUDENT CODE
+/// =====================================================
+
+/// Proposal methods from slides
+/// Feel free to use them,
+///     or delete them and implement your own helping methods
+void insertEntry(Node *pNode, int entryIdx, const Entry &newEntry) {
+    // Shift all entries after the new entry to the right
+    for (int i = pNode->numEntries - 1; i >= entryIdx; i--) {
+        pNode->entries[i + 1] = pNode->entries[i];
+    }
+    pNode->entries[entryIdx] = newEntry; // Insert the new entry
+    pNode->numEntries++; // Increment the number of entries in the node
+}
+
+void splitNode(Node *pNode, int entryIdx, Entry &upEntry) {
+    Node *newNode = new Node(); // Create a new node
+    int midIndex = M / 2; // Calculate the middle index
+    Entry midEntry = pNode->entries[midIndex]; // Get the middle entry
+
+    // Copy entries from the middle index to the end of the node to the new node
+    for (int i = midIndex + 1; i < M; i++) {
+        newNode->entries[newNode->numEntries++] = pNode->entries[i];
+    }
+
+    // Update the number of entries in the original node
+    pNode->numEntries = midIndex;
+
+    // Check if the new entry should be inserted into the original or new node
+    if (entryIdx <= midIndex) {
+        insertEntry(pNode, entryIdx, upEntry); // Insert the new entry into the original node
+    } else {
+        insertEntry(newNode, entryIdx - midIndex - 1, upEntry); // Insert the new entry into the new node
+    }
+
+    upEntry = midEntry; // Set the middle entry as the promoted entry
+    upEntry.rightPtr = newNode; // Set the right pointer of the promoted entry to the new node
+}
+
+int searchNode(Node *nodePtr, K key) {
+    int entryIdx = 0; // Start at the first entry
+    while (entryIdx < nodePtr->numEntries && nodePtr->entries[entryIdx].key < key) {
+        entryIdx++; // Increment the entry index
+    }
+    return entryIdx; // Return the index of the entry that contains the key
+}
+
+bool insertNode(Node *&root, const K &key, const D &data, Entry &upEntry) {
+    if (!root) {
+        // If root is null, create a new node and set it as the root
+        root = new Node();
+        root->entries[0] = Entry(key, data);
+        root->numEntries = 1;
+        return true;
+    }
+
+    int index = searchNode(root, key);
+    if (index < root->numEntries && root->entries[index].key == key) {
+        // Key already exists in the tree
+        return false;
+    }
+
+    bool isInserted = insertNode(root->firstPtr, key, data, upEntry);
+    if (isInserted) {
+        // Entry was inserted in the child node, update the current node's entry
+        if (root->isFull()) {
+            splitNode(root, M / 2, upEntry);
+            return true;
+        }
+        // Shift all entries after the insertion point to the right
+        for (int i = root->numEntries; i > index; i--) {
+            root->entries[i] = root->entries[i - 1];
+        }
+        root->entries[index] = upEntry;
+        root->numEntries++;
+    }
+    return root->isFull();
+}
+
+void insert(Node *&root, const K &key, const D &data) {
+    Entry upEntry;
+    if (insertNode(root, key, data, upEntry)) {
+        Node *newRoot = new Node();
+        newRoot->entries[0] = upEntry;
+        newRoot->firstPtr = root;
+        newRoot->numEntries = 1;
+        root = newRoot;
+    }
+}
+
+/// TODO: Implement following method
+void insert(const K &key, const D &data) {
+    if (root == nullptr) {
+        root = new Node();
+        root->entries[0] = Entry(key, data);
+        root->numEntries = 1;
+        return;
+    }
+    insert(root, key, data);
+}
+
+/// END STUDENT CODE

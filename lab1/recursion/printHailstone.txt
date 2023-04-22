@@ -1,0 +1,13 @@
+void printHailstone(int number)
+{
+    /*  
+     * STUDENT ANSWER
+     */
+     if (number == 1) {
+        cout << "1";
+        return;
+    }
+    cout << number << " ";
+    if (number % 2 == 0) return printHailstone(number/2);
+    return printHailstone(3*number + 1);
+}

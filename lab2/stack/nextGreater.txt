@@ -1,0 +1,28 @@
+// iostream, stack and vector are included
+
+vector<int> nextGreater(vector<int>& arr){
+    stack<int> st;
+    for (int i = 0; i < arr.size(); i++) {
+        bool check = false;
+        for (int j = i + 1; j < arr.size(); j++) {
+            if (arr[j] > arr[i]) {
+                st.push(arr[j]);
+                check = true;
+                break;
+            }
+        }
+        if (check == false) {
+            st.push(-1);
+        }
+    }
+    stack<int> st1;
+    while (!st.empty()) {
+        st1.push(st.top());
+        st.pop();
+    }
+    for (int i = 0; i < arr.size(); i++) {
+        arr[i] = st1.top();
+        st1.pop();
+    }
+    return arr;
+}

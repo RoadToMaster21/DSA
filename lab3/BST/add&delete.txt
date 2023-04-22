@@ -1,0 +1,56 @@
+//Helping functions
+Node* insert(Node* root, int value) {
+    if (root == NULL) {
+        return new Node(value);
+    }
+    if (value < root->value) {
+        root->pLeft = insert(root->pLeft, value);
+    } else {
+        root->pRight = insert(root->pRight, value);
+    }
+    return root;
+}
+
+Node* deletion(Node* root, int value) {
+    if (root == NULL) return root;
+    if (value < root->value) {
+        root->pLeft = deletion(root->pLeft, value);
+        return root;
+    } else if (root->value < value) {
+        root->pRight = deletion(root->pRight, value);
+        return root;
+    }
+    if (root->pLeft == NULL) {
+        Node* temp = root->pRight;
+        delete root;
+        return temp;
+    } else if (root->pRight == NULL) {
+        Node* temp = root->pLeft;
+        delete root;
+        return temp;
+    } 
+    
+    Node* succParent = root;
+    Node* succ = root->pRight;
+    while (succ->pLeft != NULL) {
+        succParent = succ;
+        succ = succ->pLeft;
+    }
+    if (succParent != root) {
+        succParent->pLeft = succ->pRight;
+    } else {
+        succParent->pRight = succ->pRight;
+    }
+    root->value = succ->value;
+    return root;
+}
+
+void add(T value){
+    //TODO
+    root = insert(root, value);
+}
+
+void deleteNode(T value){
+    //TODO
+    root = deletion(root, value);
+}

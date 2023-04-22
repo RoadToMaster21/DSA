@@ -1,0 +1,32 @@
+int sizeOf(long long key) {
+    int result = 0;
+    while (key > 0) {
+        result++;
+        key /= 10;
+    }
+    return result;
+}
+
+int foldShift(long long key, int addressSize)
+{
+    int result = 0;
+    while (sizeOf(key) > addressSize) {
+        int temp = key / pow(10, sizeOf(key) - addressSize);
+        result += temp;
+        key -= temp * pow(10, sizeOf(key) - addressSize);
+    }
+    
+    if (key > 0) {
+        result += key;
+    }
+    int divnum = pow(10, addressSize);
+    return result % divnum;
+}
+
+int rotation(long long key, int addressSize)
+{
+    int lastnum = key % 10;
+    key = lastnum * pow(10, sizeOf(key) - 1) + key / 10;
+    int result = foldShift(key, addressSize);
+    return result;
+}

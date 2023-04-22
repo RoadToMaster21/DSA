@@ -1,0 +1,11 @@
+//Helping functions
+int countLeaf(Node* root) {
+    if (root == NULL) return 0;
+    if (root->pLeft == NULL && root->pRight == NULL) return root->value;
+    return countLeaf(root->pLeft) + countLeaf(root->pRight);
+}
+
+int sumOfLeafs(){
+    //TODO
+    return countLeaf(root);
+}

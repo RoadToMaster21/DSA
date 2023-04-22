@@ -1,0 +1,55 @@
+BSTNode* deletion(BSTNode* root, int value) {
+    if (root == NULL) return root;
+    if (value < root->val) {
+        root->left = deletion(root->left, value);
+        return root;
+    } else if (root->val < value) {
+        root->right = deletion(root->right, value);
+        return root;
+    }
+    if (root->left == NULL) {
+        BSTNode* temp = root->right;
+        delete root;
+        return temp;
+    } else if (root->right == NULL) {
+        BSTNode* temp = root->left;
+        delete root;
+        return temp;
+    } 
+    
+    BSTNode* succParent = root;
+    BSTNode* succ = root->right;
+    while (succ->left != NULL) {
+        succParent = succ;
+        succ = succ->left;
+    }
+    if (succParent != root) {
+        succParent->left = succ->right;
+    } else {
+        succParent->right = succ->right;
+    }
+    root->val = succ->val;
+    return root;
+}
+
+void findvalue(BSTNode* root, int arr[], int& i, int lo, int hi) {
+    if (root != NULL) {
+        findvalue(root->left, arr, i, lo, hi);
+        if (root->val < lo || root->val > hi) {
+            arr[i] = root->val;
+            i++;
+        }
+        findvalue(root->right, arr, i, lo, hi);
+    }
+}
+
+BSTNode* subtreeWithRange(BSTNode* root, int lo, int hi) {
+    // STUDENT ANSWER
+    int arr[100000];
+    int i = 0;
+    findvalue(root, arr, i, lo, hi);
+    for (int k = 0; k < i ; k++) {
+        root = deletion(root, arr[k]);
+    }
+    return root;
+}

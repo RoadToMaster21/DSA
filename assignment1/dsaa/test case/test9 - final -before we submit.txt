@@ -1,0 +1,17 @@
+REG 5 Kas 70
+REG Naruto 35
+REGM Sasuke 34 2
+PS 2
+REG 8 AD 20
+REG 4 KaKashi 50
+PT
+REG Himawari 17
+REGM Jisu 15 2
+REG 3 Lin 29
+SQ 2
+REG Gara 33
+CLE 3
+CLE 1
+PQ 3
+PT
+PS

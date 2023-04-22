@@ -1,0 +1,30 @@
+// STUDENT ANSWER BEGIN
+// You can define other functions here to help you.
+
+bool isExist(Node* root, T value) {
+    if (root == NULL) return false;
+    if (root->value == value) return true;
+    if (value < root->value) {
+        return isExist(root->pLeft, value);
+    }
+    return isExist(root->pRight, value);
+}
+
+T sumLR(Node* root, T left, T right) {
+    if (root == NULL) return 0;
+    if (root->value < left) return sumLR(root->pRight, left, right);
+    if (root->value > right) return sumLR(root->pLeft, left, right);
+    return root->value + sumLR(root->pLeft, left, right) + sumLR(root->pRight, left, right);
+}
+
+bool find(T i) {
+    // TODO: return true if value i is in the tree; otherwise, return false.
+    return isExist(root, i);
+}
+
+T sum(T l, T r) {
+    // TODO: return the sum of all element in the tree has value in range [l,r].
+    return sumLR(root, l, r);
+}
+
+// STUDENT ANSWER END

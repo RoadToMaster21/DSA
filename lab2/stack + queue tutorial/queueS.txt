@@ -1,0 +1,73 @@
+class QueueS {
+private:
+    stack<int> st;
+
+public:
+    void enqueue(int value) {
+        st.push(value);
+    }
+    int dequeue() {
+        if (st.empty()) {
+            throw out_of_range("Empty queue");
+        }
+        stack<int> st1;
+        while (!st.empty()) {
+            st1.push(st.top());
+            st.pop();
+        }
+        int x = st1.top();
+        st1.pop();
+        
+        while (!st1.empty()) {
+            st.push(st1.top());
+            st1.pop();
+        }
+        return x;   
+    }
+    int front() {
+        if (st.empty()) {
+            throw out_of_range("Empty queue");
+        }
+        stack<int> st1;
+        while (!st.empty()) {
+            st1.push(st.top());
+            st.pop();
+        }
+        int x = st1.top();
+        
+        while (!st1.empty()) {
+            st.push(st1.top());
+            st1.pop();
+        }
+        return x;
+    }
+    int rear() {
+        if (st.empty()) {
+            throw out_of_range("Empty queue");
+        }
+        return st.top();
+    }
+    
+    string toString() {
+        if (st.empty()) {
+            return "FRONT||REAR";
+        }
+        string str = "FRONT| ";
+        stack<int> st1;
+        
+        while (!st.empty()) {
+            st1.push(st.top());
+            st.pop();
+        }
+        while (st1.size() != 1) {
+            str += to_string(st1.top()) + " ";
+            st.push(st1.top());
+            st1.pop();
+        }
+        str += to_string(st1.top());
+        st.push(st1.top());
+        str += "|REAR";
+        return str;
+        
+    }
+};

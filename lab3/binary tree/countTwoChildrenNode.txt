@@ -1,0 +1,15 @@
+// STUDENT ANSWER BEGIN
+// You can define other functions here to help you.
+
+int count2children(Node* root) {
+    if (root == NULL) return 0;
+    if (root->pLeft == NULL) return count2children(root->pRight);
+    if (root->pRight == NULL) return count2children(root->pLeft);
+    return 1 + count2children(root->pLeft) + count2children(root->pRight);
+}
+
+int countTwoChildrenNode()
+{
+    return count2children(root);
+}
+// STUDENT ANSWER END
