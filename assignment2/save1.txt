@@ -1,0 +1,658 @@
+#include <iostream>
+#include <queue>
+#include <deque>
+#include <fstream>
+#include <list>
+#include <iterator>
+#include <algorithm>
+
+#define MAXSIZE 32
+using namespace std;
+
+// ----------- HUFFMAN CODE BELOW ------------//
+int findIndex(char data, char arr[]) {
+    for (int i = 0; i < 26; i++) {
+        if (arr[i] == data) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+struct hfMinHeapNode {
+	char data;
+	unsigned freq;
+	hfMinHeapNode *left, *right;
+	hfMinHeapNode(char data, unsigned freq) {
+		left = right = NULL;
+		this->data = data;
+		this->freq = freq;
+	}
+};
+
+struct compare {
+	bool operator()(hfMinHeapNode* l, hfMinHeapNode* r) {
+		return (l->freq > r->freq);
+	}
+};
+
+void printCodes(struct hfMinHeapNode* root, string str, char arr[], string traverse[]) {
+	if (!root) return;
+	if (root->data != '$') {
+	    traverse[findIndex(root->data, arr)] = str;
+	}
+	printCodes(root->left, str + "0", arr, traverse);
+	printCodes(root->right, str + "1", arr, traverse);
+}
+
+void HuffmanCodes(char data[], int freq[], int size, char arr[], string traverse[]) {
+	struct hfMinHeapNode *left, *right, *top;
+	priority_queue<hfMinHeapNode*, vector<hfMinHeapNode*>, compare>	minHeap;
+
+	for (int i = 0; i < size; ++i)
+		minHeap.push(new hfMinHeapNode(data[i], freq[i]));
+
+	while (minHeap.size() != 1) {
+		left = minHeap.top();
+		minHeap.pop();
+
+		right = minHeap.top();
+		minHeap.pop();
+		top = new hfMinHeapNode('$',
+							left->freq + right->freq);
+		top->left = left;
+		top->right = right;
+		minHeap.push(top);
+	}
+	printCodes(minHeap.top(), "", arr, traverse);
+}
+// ----------- HUFFMAN CODE ABOVE ------------//
+
+class Customer {
+public:
+    string name;
+    int result;
+    int id;
+    int num;
+    Customer () {
+        name = "";
+        result = 0;
+        id = 0;
+        num = 0;
+    }
+    Customer(string name, int result, int id, int num) {
+        this->name = name;
+        this->result = result;
+        this->id = id;
+        this->num = num;
+    }
+};
+
+
+// ------------- HASHTABLE BELOW --------------//
+class Hashtable {
+public:
+    Customer* hashtable = new Customer[MAXSIZE/2];
+public:
+    void insertCustomer(Customer customer) {
+        int index = customer.result % (MAXSIZE/2);
+        if (hashtable[index].name == customer.name) {
+            return;
+        }
+        if (hashtable[index].name == "") {
+            hashtable[index] = customer;
+            return;
+        }
+        int run = index + 1;
+        while (run < MAXSIZE / 2) {
+            if (hashtable[run].name != "") {
+                hashtable[run] = customer;
+                return;
+            }
+            run++;
+        }
+        run = 0;
+        while (run < index) {
+            if (hashtable[index].name != "") {
+                hashtable[index] = customer;
+                return;
+            }
+            index++;
+        }
+    }
+    bool isFull() {
+        for (int i = 0; i < MAXSIZE / 2; i++) {
+            if (hashtable[i].name == "") {
+                return false;
+            }
+        }
+        return true;
+    }
+    void updateHT(string name) {
+        for (int i = 0; i < MAXSIZE / 2; i++) {
+            if (hashtable[i].name == name) {
+                hashtable[i].num++;
+                return;
+            }
+        }
+    }
+    void printHT() {
+        for (int i = 0; i < MAXSIZE / 2; i++) {
+            if (hashtable[i].name != "") {
+                cout << hashtable[i].id << "-" << hashtable[i].result << "-" << hashtable[i].num << endl;
+            }
+        }
+    }
+    void clearHT() {
+        hashtable = new Customer[MAXSIZE/2];
+    }
+    void cleHT(int id) {
+        for (int i = 0; i < MAXSIZE/2; i++) {
+            if (hashtable[i].id == id) {
+                Customer c("", 0, 0, 0);
+                hashtable[i] = c;
+                return;
+            }
+        }
+    }
+};
+// -------------- HASHTABLE ABOVE ----------------//
+
+// ----------- STRING NORMALIZE BELOW ------------//
+bool checkLine(string str) {
+    // check space at head and tail of string
+    if (str[0] == ' ' || str[str.length() - 1] == ' ') {
+        return false;
+    }
+    int space = 0;
+    for (int i = 0; i < str.length(); i++) {
+        // check special character
+        if (str[i] == ' ' || str[i] == '-' || (str[i] >= '0' && str[i] <= '9') || (str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')) {
+            continue;
+        } else return false;
+        if (str[i] == ' ') space++;
+        if (str[i] >= '0' && str[i] <= '9' && str[i-1] != ' ') return false;
+    }
+    // only 1 space
+    if (space != 1 && space != 0) {
+        return false;
+    }
+    return true;
+}
+
+string lower(string str) {
+    string s = str;
+    for (int i = 0; i < s.length(); i++) {
+        s[i] = tolower(s[i]);
+    }
+    return s;
+}
+bool checkNum(string str) {
+    for (int i = 1; i < str.length(); i++) {
+        if (str[i] >= '0' && str[i] <= '9') continue;
+        else return false;
+    }
+    if ((str[0] == '-') || (str[0] >= '0' && str[0] <= '9')) return true;
+    return true;
+}
+bool checkChar(string str) {
+    for (int i = 0; i < str.length(); i++) {
+        if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')){
+            continue;
+        } else return false;
+    }
+    return true;
+}
+// ----------- STRING NORMALIZE ABOVE ------------//
+
+// ----------- AVLTree IMPLEMENT BELOW ------------//
+struct Node {
+	Customer customer;
+	struct Node *left;
+	struct Node *right;
+	int height;
+};
+
+int height(struct Node *N) {
+	if (N == NULL)
+		return 0;
+	return N->height;
+}
+
+struct Node* newNode(Customer customer) {
+	struct Node* node = new Node;
+	node->customer = customer;
+	node->left = NULL;
+	node->right = NULL;
+	node->height = 1;
+	return(node);
+}
+
+struct Node *rightRotate(struct Node *root) {
+	struct Node* newroot = root->left;
+	struct Node* temp = newroot->right;
+	newroot->right = root;
+	root->left = temp;
+	// Update heights
+	root->height = max(height(root->left), height(root->right)) + 1;
+	newroot->height = max(height(newroot->left), height(newroot->right)) + 1;
+
+	return newroot;
+}
+
+struct Node *leftRotate(struct Node *root) {
+	struct Node* newroot = root->right;
+	struct Node* temp = newroot->left;
+	newroot->left = root;
+	root->right = temp;
+	// Update heights
+	root->height = max(height(root->left), height(root->right)) + 1;
+	newroot->height = max(height(newroot->left), height(newroot->right)) + 1;
+
+	return newroot;
+}
+
+int getBalance(Node *N) {
+	if (N == NULL) return 0;
+	return height(N->left) - height(N->right);
+}
+
+Node* insert(Node* node, Customer customer) {
+	if (node == NULL)
+		return(newNode(customer));
+
+	if (customer.result < node->customer.result)
+		node->left = insert(node->left, customer);
+	else {
+        node->right = insert(node->right, customer);
+	}
+
+	node->height = 1 + max(height(node->left), height(node->right));
+
+	int balance = getBalance(node);
+	// Left Left Case
+	if (balance > 1 && customer.result < node->left->customer.result) {
+        return rightRotate(node);
+	}
+	// Right Right Case
+	if (balance < -1 && customer.result >= node->right->customer.result) {
+        return leftRotate(node);
+	}
+	// Left Right Case
+	if (balance > 1 && customer.result >= node->left->customer.result) {
+		node->left = leftRotate(node->left);
+		return rightRotate(node);
+	}
+	// Right Left Case
+	if (balance < -1 && customer.result < node->right->customer.result) {
+		node->right = rightRotate(node->right);
+		return leftRotate(node);
+	}
+
+	return node;
+}
+Node* minValueNode(Node* node)
+{
+    Node* current = node;
+    while (current->left != NULL) {
+        current = current->left;
+    }
+    return current;
+}
+Node* deleteNode(Node* root, int result) {
+    if (root == NULL) return root;
+    if (result < root->customer.result) {
+        root->left = deleteNode(root->left, result);
+    } else if (result > root->customer.result) {
+        root->right = deleteNode(root->right, result);
+    } else {
+        if ((root->left == NULL) || (root->right == NULL)) {
+            Node *temp = root->left ? root->left : root->right;
+            // No child case
+            if (temp == NULL) {
+                temp = root;
+                root = NULL;
+            } else *root = *temp;
+            free(temp);
+        } else {
+            Node* temp = minValueNode(root->right);
+            root->customer = temp->customer;
+            root->right = deleteNode(root->right, temp->customer.result);
+        }
+    }
+    if (root == NULL) return root;
+    root->height = 1 + max(height(root->left), height(root->right));
+
+    int balance = getBalance(root);
+    // Left Left Case
+    if (balance > 1 && getBalance(root->left) >= 0) {
+        return rightRotate(root);
+    }
+    // Left Right Case
+    if (balance > 1 && getBalance(root->left) < 0) {
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+    // Right Right Case
+    if (balance < -1 && getBalance(root->right) <= 0) {
+        return leftRotate(root);
+    }
+    // Right Left Case
+    if (balance < -1 && getBalance(root->right) > 0) {
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+    return root;
+}
+void avlUpdateNum(Node* root, int result) {
+    if (root->customer.result == result) {
+        root->customer.num++;
+        return;
+    } else if (result < root->customer.result) {
+        avlUpdateNum(root->left, result);
+    } else {
+        avlUpdateNum(root->right, result);
+    }
+}
+
+bool isAVLfull(deque <Customer> fifo) {
+    int num = 0;
+    for (int i = 0; i < fifo.size(); i++) {
+        if (fifo[i].id > MAXSIZE/2) {
+            num++;
+        }
+    }
+    if (num == MAXSIZE/2) return true;
+    return false;
+}
+
+void preOrder(Node *root) {
+	if (root != NULL) {
+		cout << root->customer.id << "-" << root->customer.result << "-" << root->customer.num << endl;
+		preOrder(root->left);
+		preOrder(root->right);
+	}
+}
+
+// ----------- AVLTree IMPLEMENT ABOVE ------------//
+
+bool contain(deque <Customer> fifo, string name) {
+    for (int i = 0; i < fifo.size(); i++) {
+        if (fifo[i].name == name) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool contain(deque <Customer> fifo, int id) {
+    for (int i = 0; i < fifo.size(); i++) {
+        if (fifo[i].id == id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void fifoUpdateNum(deque <Customer> fifo, string name) {
+    for (int i = 0; i < fifo.size(); i++) {
+        if (fifo[i].name == name) {
+            fifo[i].num++;
+            return;
+        }
+    }
+}
+void printfifo(deque <Customer> fifo) {
+    for (int i = 0; i < fifo.size(); i++) {
+        cout << fifo[i].result << " ";
+    }
+    cout << endl;
+}
+Customer getCustomer(deque <Customer> fifo, int id) {
+    for (int i = 0; i < fifo.size(); i++) {
+        if (fifo[i].id == id) {
+            return fifo[i];
+        }
+    }
+    Customer c("", 0, 0, 0);
+    return c;
+}
+
+Customer getCustomer(deque <Customer> fifo, string name) {
+    for (int i = 0; i < fifo.size(); i++) {
+        if (fifo[i].name == name) {
+            return fifo[i];
+        }
+    }
+    Customer c("", 0, 0, 0);
+    return c;
+}
+
+
+
+void simulate(string filename)
+{
+    char arr[] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+	int freq[] = { 77, 17, 32, 42, 120, 24, 17, 50, 76, 4, 7, 42, 24, 67, 67, 20, 5, 59, 67, 85, 37, 12, 22, 4, 22, 2 };
+    string traverse[26];
+	int size = 26;
+
+	HuffmanCodes(arr, freq, size, arr, traverse);
+	//for (int i = 0; i < size; i++) {
+	//    cout << arr[i] << " : " << traverse[i] << endl;
+	//}
+    Hashtable hashtable;
+    deque <Customer> fifo;
+    deque <Customer> lrco;
+    Node* root = NULL;
+
+    ifstream file;
+    file.open(filename);
+    string line;
+    while (getline(file, line)) {
+        if (checkLine(line) == false) {
+            continue;
+        }
+        cout << line << endl;
+        int pos = line.find(" ", 0);
+        string com = line.substr(0, pos);
+        // REG Command
+        if (com == "REG") {
+            string name = line.substr(pos + 1, line.length() - (pos + 1));
+            //cout << name << endl;
+            int result;
+            if (checkChar(name)) {
+                // find the value of result
+                if (name.length() == 1) {
+                    result = 1;
+                } else {
+                    // normalize to lower case
+                    string nameAN = lower(name);
+                    // find the string of name
+                    string temp = "";
+                    int index = nameAN.length() - 1;
+                    while (temp.length() <= 15 && index >= 0) {
+                        temp = traverse[findIndex(nameAN[index], arr)] + temp;
+                        index--;
+                    }
+                    //get 15 characters
+                    if (temp.length() > 15) {
+                        temp = temp.substr(temp.length() - 15, 15);
+                    }
+                    result = stoi(temp, nullptr, 2);
+                    cout << result << endl;
+                }
+
+                if (contain(fifo, name)) {
+                    fifoUpdateNum(fifo, name);
+                    Customer temp = getCustomer(fifo, name);
+                    if (temp.id <= MAXSIZE/2) {
+                        hashtable.updateHT(temp.name);
+                    } else {
+                        avlUpdateNum(root, temp.result);
+                    }
+                    for(auto it = lrco.begin(); it != lrco.end(); ) {
+                        if ((*it).name == temp.name) {
+                            it = lrco.erase(it);
+                            break;
+                        } else {
+                            ++it;
+                        }
+                    }
+                    lrco.push_back(temp);
+                } else if (hashtable.isFull() && isAVLfull(fifo)) {
+                    int opt = result % 3;
+                    if (opt == 0) {
+
+                    }
+                    if (opt == 1) {
+
+                    }
+                    if (opt == 2) {
+
+                    }
+                } else {
+                    if (result % 2 == 1) {
+                        int id = result % (MAXSIZE/2) + 1;
+                        if (!hashtable.isFull()) {
+                            while (contain(fifo, id)) {
+                                if (id == MAXSIZE/2){
+                                    id = 0;
+                                } else id++;
+                            }
+                            Customer customer(name, result, id, 1);
+                            hashtable.insertCustomer(customer);
+                            fifo.push_back(customer);
+                            lrco.push_back(customer);
+                        } else {
+                            id = MAXSIZE/2 + 1;
+                            while (contain(fifo, id)) {
+                                id++;
+                            }
+                            Customer customer(name, result, id, 1);
+                            root = insert(root, customer);
+                            fifo.push_back(customer);
+                            lrco.push_back(customer);
+                        }
+                    }
+                    // area 2 condition
+                    if (result % 2 == 0) {
+                        int id = result % (MAXSIZE/2) + 1 + MAXSIZE/2;
+                        if (!isAVLfull(fifo)) {
+                            while (contain(fifo, id)) {
+                                if (id == MAXSIZE){
+                                    id = MAXSIZE/2 + 1;
+                                } else id++;
+                            }
+                            Customer customer(name, result, id, 1);
+                            root = insert(root, customer);
+                            fifo.push_back(customer);
+                            lrco.push_back(customer);
+                        } else {
+                            id = 1;
+                            while (contain(fifo, id)) {
+                                id++;
+                            }
+                            Customer customer(name, result, id, 1);
+                            hashtable.insertCustomer(customer);
+                            fifo.push_back(customer);
+                            lrco.push_back(customer);
+                        }
+                    }
+                }
+            }
+        }
+        // CLE command
+        if (com == "CLE") {
+            string temp = line.substr(pos + 1, line.length() - (pos + 1));
+            printfifo(fifo);
+            printfifo(lrco);
+            if (checkNum(temp)) {
+                int id = stoi(temp, nullptr, 10);
+                if (id < 1) {
+                    hashtable.clearHT();
+                    for(auto it = fifo.begin(); it != fifo.end(); ) {
+                        if ((*it).id <= MAXSIZE/2) {
+                            it = fifo.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    }
+                    for(auto it = lrco.begin(); it != lrco.end(); ) {
+                        if ((*it).id <= MAXSIZE/2) {
+                            it = lrco.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    }
+                }
+
+                if (id >= 1 && id <= MAXSIZE) {
+                    for(auto it = fifo.begin(); it != fifo.end(); ) {
+                        if ((*it).id == id) {
+                            it = fifo.erase(it);
+                            break;
+                        } else {
+                            ++it;
+                        }
+                    }
+                    for(auto it = lrco.begin(); it != lrco.end(); ) {
+                        if ((*it).id == id) {
+                            it = lrco.erase(it);
+                            break;
+                        } else {
+                            ++it;
+                        }
+                    }
+                    if (id <= MAXSIZE/2) {
+                        hashtable.cleHT(id);
+                    } else {
+                        Customer customer = getCustomer(fifo, id);
+                        root = deleteNode(root, customer.result);
+                    }
+                }
+
+                if (id > MAXSIZE) {
+                    root = NULL;
+                    for(auto it = fifo.begin(); it != fifo.end(); ) {
+                        if ((*it).id >= MAXSIZE/2 + 1) {
+                            it = fifo.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    }
+                    for(auto it = lrco.begin(); it != lrco.end(); ) {
+                        if ((*it).id >= MAXSIZE/2 + 1) {
+                            it = lrco.erase(it);
+                        } else {
+                            ++it;
+                        }
+                    }
+                }
+            }
+        }
+        // Print HT command
+        if (com == "PrintHT") {
+            hashtable.printHT();
+
+        }
+        // PrintAVL command
+        if (com == "PrintAVL") {
+            preOrder(root);
+
+        }
+        // PrintMH command
+        if (com == "PrintMH") {
+
+        }
+
+    }
+	return;
+}
+
+int main(int argc, char* argv[]) {
+    string fileName = "test.txt";
+    simulate(fileName);
+
+    return 0;
+}

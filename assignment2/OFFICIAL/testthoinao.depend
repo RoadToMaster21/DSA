@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1683281659 source:c:\users\dell\máy tính\assignment2\testthoinao\main.cpp
+	"main.h"
+	"restaurant.cpp"
+
+1683281717 c:\users\dell\máy tính\assignment2\testthoinao\main.h
+	<bits/stdc++.h>
+	<string>
+
+1683284450 c:\users\dell\máy tính\assignment2\testthoinao\restaurant.cpp
+	<iostream>
+	"main.h"
+

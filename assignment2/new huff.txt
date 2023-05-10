@@ -1,0 +1,144 @@
+#include<bits/stdc++.h>
+#define MAXSIZE 6
+using namespace std;
+
+bool compareChars(pair<char, int> p1, pair<char, int> p2) {
+    if (p1.second != p2.second) {
+        return p1.second < p2.second;
+    } else {
+        return p1.first < p2.first;
+    }
+}
+
+void countChars(string str, deque<char>& charList, deque<int>& countList) {
+    deque<pair<char, int>> charQueue;
+    unordered_map<char, int> counts;
+    for (char c : str) {
+        counts[c]++;
+        bool found = false;
+        for (auto& p : charQueue) {
+            if (p.first == c) {
+                p.second++;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            charQueue.push_back(make_pair(c, 1));
+        }
+    }
+    sort(charQueue.begin(), charQueue.end(), compareChars);
+    for (auto& p : charQueue) {
+        charList.push_back(p.first);
+        countList.push_back(p.second);
+    }
+}
+int findIndex(char data, deque<char> charList) {
+    for (size_t i = 0; i < charList.size(); i++) {
+        if (charList[i] == data) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+struct hfMinHeapNode {
+	char data;
+	unsigned freq;
+	hfMinHeapNode *left, *right;
+	hfMinHeapNode(char data, unsigned freq) {
+		left = right = NULL;
+		this->data = data;
+		this->freq = freq;
+	}
+};
+
+void printCodes(struct hfMinHeapNode* root, string str, deque<char> charList, string traverse[]) {
+	if (!root) return;
+	if (root->data != '~') {
+	    traverse[findIndex(root->data, charList)] = str;
+	}
+	printCodes(root->left, str + "0", charList, traverse);
+	printCodes(root->right, str + "1", charList, traverse);
+}
+
+void print(deque<hfMinHeapNode*> minHeap) {
+    for (size_t i = 0; i < minHeap.size(); i++) {
+        cout <<minHeap[i]->data << ": " << minHeap[i]->freq << "    ";
+    }
+    cout << endl;
+}
+
+void HuffmanCodes(deque<char> charList, deque<int> countList, string traverse[]) {
+	hfMinHeapNode *left, *right, *top;
+	deque<hfMinHeapNode*> minHeap;
+	for (int i = 0; i < charList.size(); ++i) {
+        minHeap.push_back(new hfMinHeapNode(charList[i], countList[i]));
+	}
+	//print(minHeap);
+	while (minHeap.size() != 1) {
+		left = minHeap.front();
+		minHeap.pop_front();
+
+		right = minHeap.front();
+		minHeap.pop_front();
+		top = new hfMinHeapNode('~', left->freq + right->freq);
+		top->left = left;
+		top->right = right;
+		stack<hfMinHeapNode*> st;
+		while (top->freq < minHeap.back()->freq) {
+		    st.push(minHeap.back());
+		    minHeap.pop_back();
+		}
+		minHeap.push_back(top);
+		while (!st.empty()) {
+		    minHeap.push_back(st.top());
+		    st.pop();
+		}
+		//print(minHeap);
+	}
+	printCodes(minHeap.front(), "", charList, traverse);
+}
+
+int main() {
+    // fstream file;
+    // file.open("test.txt");
+    // string line;
+    string str = "iuiwehruihqwUIAGSIDiernbsandfb";
+    deque<char> charList;
+    deque<int> countList;
+    countChars(str, charList, countList);
+    //cout << charList.size();
+    // for (int i = 0; i < charList.size(); i++) {
+    //     cout << charList[i] << ": " << countList[i] << endl;
+    // }
+    string traverse[charList.size()];
+    
+    // for (int i = 0; i < charList.size(); i++) {
+    //     cout << charList[i] << ": " << traverse[i] << endl;
+    // }
+    string temp = "";
+    if (charList.size() == 1) {
+        traverse[0] = '1';
+        int index = str.length() - 1;
+        while (temp.length() <= 15 && index >= 0) {
+            temp = traverse[0] + temp;
+            index--;
+        }   
+    } else {
+        HuffmanCodes(charList, countList, traverse);
+        int index = str.length() - 1;
+        while (temp.length() <= 15 && index >= 0) {
+            temp = traverse[findIndex(str[index], charList)] + temp;
+            index--;
+        }
+    }
+    if (temp.length() > 15) {
+        temp = temp.substr(temp.length() - 15, 15);
+    }
+    int result = stoi(temp, nullptr, 2);
+    cout << temp << " -> " << result << endl;  
+    return 0;
+    
+}
+
